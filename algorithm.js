@@ -1,3 +1,4 @@
+import { bookstore } from "./database.js"
 /*
 You're working with a small bookstore's inventory system. 
 The store has two arrays of data: one for books in stock and one for customer orders. 
@@ -7,15 +8,46 @@ The function should define the two arrays and a book title as parameters.
 
 The function should perform the following checks:
 
-* There must be enough quantity of a book we sell in order to fulfill an order
-* If there are pending orders, reduce the quantity of the existing inventory for each pending order
-* The book title must be in our existing catalog of inventory
-* If there is still quantity available after pending orders are accounted for, fulfill the new order
-* Return an appropriate message for each scenario (can/cannot be fulfilled)
 
 Note: Define the algorithm with comments, and then implement each step with code.
 */
 
-const fulfillBookOrder = () => {
+import { getInventory, getOrders } from "./database.js"
+// get a copy of the inventory and pending orders
+const bookInventory = bookstore.inventory
+const bookOrders = bookstore.orders
+
+const fulfillBookOrder = (inventory, orders, bookTitle) => {
+
+    // * The book title must be in our existing catalog of inventory
+    // iterate through the catalog to see if book exists
+    for (const bookObject of inventory) {
+        if (bookObject.title === bookTitle) {
+
+            // if book does exist, check if there are pending orders 
+            for (const orderObject of orders) {
+                if (bookObject.title === orderObject.bookTitle) {
+                    // check quantity to make sure > 0
+                    if (bookObject.quantity > 0) {
+                        // * If there are pending orders, reduce the quantity of the existing inventory for each pending order
+                        bookObject.quantity--
+                    } else {
+                        return "Order cannot be fulfilled, not enough inventory."
+                    }
+                }
+            }
+
+        } else {
+            // if book doesn't exist, throw a message
+            return "Order cannot be fulfilled"
+        }
+
+    }
+    // iterate through order array
+
+    // * If there is still quantity available after pending orders are accounted for, fulfill the new order
+    // * There must be enough quantity of a book we sell in order to fulfill an order
+
+    // * Return an appropriate message for each scenario (can/cannot be fulfilled)
 
 }
