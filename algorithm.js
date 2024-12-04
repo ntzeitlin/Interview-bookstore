@@ -17,7 +17,9 @@ const bookInventory = bookstore.inventory
 const bookOrders = bookstore.orders
 
 const fulfillBookOrder = (inventory, orders, bookTitle) => {
-
+    const infoMap = new Map();
+    infoMap.set('bookTitle', '')
+    infoMap.set('isFulfilled', false)
     // * The book title must be in our existing catalog of inventory
     // iterate through the catalog to see if book exists
     for (const bookObject of inventory) {
@@ -38,14 +40,21 @@ const fulfillBookOrder = (inventory, orders, bookTitle) => {
                 bookObject.quantity--
                 // * If there is still quantity available after pending orders are accounted for, fulfill the new order
                 // * Return an appropriate message for each scenario (can/cannot be fulfilled)
-                return "Order can be fulfilled"
+                infoMap.set('bookTitle', bookTitle)
+                infoMap.set('isFulfilled', true)
+                return infoMap
             } else {
-                return "Order cannot be fulfilled, not enough inventory."
+                infoMap.set('bookTitle', bookTitle)
+                infoMap.set('isFulfilled', false)
+                return infoMap
             }
         }
 
     }
-    return "We don't sell that book, come on."
+    // function should return a Javascript Map() with two key value pairs
+    infoMap.set('bookTitle', bookTitle)
+    infoMap.set('isFulfilled', false)
+    return infoMap
 }
 
 console.log(fulfillBookOrder(bookInventory, bookOrders, "Python for Beginners"))
