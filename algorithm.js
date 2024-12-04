@@ -12,7 +12,6 @@ The function should perform the following checks:
 Note: Define the algorithm with comments, and then implement each step with code.
 */
 
-import { getInventory, getOrders } from "./database.js"
 // get a copy of the inventory and pending orders
 const bookInventory = bookstore.inventory
 const bookOrders = bookstore.orders
@@ -26,26 +25,30 @@ const fulfillBookOrder = (inventory, orders, bookTitle) => {
 
             // if book does exist, check if there are pending orders 
             // iterate through order array
+            let bookOrderCount = 0
             for (const orderObject of orders) {
                 if (bookObject.title === orderObject.bookTitle) {
+                    bookOrderCount++
                     // check quantity to make sure > 0
                     // * There must be enough quantity of a book we sell in order to fulfill an order
-                    if (bookObject.quantity > 0) {
-                        // * If there are pending orders, reduce the quantity of the existing inventory for each pending order
-                        bookObject.quantity--
-                        // * If there is still quantity available after pending orders are accounted for, fulfill the new order
-                        // * Return an appropriate message for each scenario (can/cannot be fulfilled)
-                        return "Order can be fulfilled"
-                    } else {
-                        return "Order cannot be fulfilled, not enough inventory."
-                    }
                 }
             }
-
-        } else {
-            // if book doesn't exist, throw a message
-            return "Order cannot be fulfilled"
+            if (bookObject.quantity > bookOrderCount) {
+                // * If there are pending orders, reduce the quantity of the existing inventory for each pending order
+                bookObject.quantity--
+                // * If there is still quantity available after pending orders are accounted for, fulfill the new order
+                // * Return an appropriate message for each scenario (can/cannot be fulfilled)
+                return "Order can be fulfilled"
+            } else {
+                return "Order cannot be fulfilled, not enough inventory."
+            }
         }
 
     }
+    return "We don't sell that book, come on."
 }
+
+console.log(fulfillBookOrder(bookInventory, bookOrders, "Python for Beginners"))
+console.log(fulfillBookOrder(bookInventory, bookOrders, "JavaScript Basics"))
+console.log(fulfillBookOrder(bookInventory, bookOrders, "Data Structures 101"))
+console.log(fulfillBookOrder(bookInventory, bookOrders, "101"))
