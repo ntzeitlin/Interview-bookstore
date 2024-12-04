@@ -25,12 +25,17 @@ const fulfillBookOrder = (inventory, orders, bookTitle) => {
         if (bookObject.title === bookTitle) {
 
             // if book does exist, check if there are pending orders 
+            // iterate through order array
             for (const orderObject of orders) {
                 if (bookObject.title === orderObject.bookTitle) {
                     // check quantity to make sure > 0
+                    // * There must be enough quantity of a book we sell in order to fulfill an order
                     if (bookObject.quantity > 0) {
                         // * If there are pending orders, reduce the quantity of the existing inventory for each pending order
                         bookObject.quantity--
+                        // * If there is still quantity available after pending orders are accounted for, fulfill the new order
+                        // * Return an appropriate message for each scenario (can/cannot be fulfilled)
+                        return "Order can be fulfilled"
                     } else {
                         return "Order cannot be fulfilled, not enough inventory."
                     }
@@ -43,11 +48,4 @@ const fulfillBookOrder = (inventory, orders, bookTitle) => {
         }
 
     }
-    // iterate through order array
-
-    // * If there is still quantity available after pending orders are accounted for, fulfill the new order
-    // * There must be enough quantity of a book we sell in order to fulfill an order
-
-    // * Return an appropriate message for each scenario (can/cannot be fulfilled)
-
 }
